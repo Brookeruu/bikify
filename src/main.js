@@ -1,5 +1,6 @@
 import { BikeSearch } from './bikesearch';
 import missingBike from '../images/bike-image.png';
+import { HarvardSearch } from './harvardsearch';
 import $ from 'jquery';
 import 'bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -9,11 +10,15 @@ $(document).ready(function() {
   $('#search').submit(function(event) {
     event.preventDefault();
     let searchTerm = $('#bike').val();
+    $('#showResults').empty();
 
     let bikeSearch = new BikeSearch();
-    let promise = bikeSearch.getAllBikes(searchTerm);
+    let bikePromise = bikeSearch.getAllBikes(searchTerm);
 
-    promise.then(function(response) {
+    let harvardSearch = new HarvardSearch();
+    let harvardPromise = harvardSearch.getHarvardImages();
+
+    bikePromise.then(function(response) {
       let body = JSON.parse(response);
 
       body.bikes.forEach(function(bike) {
@@ -25,7 +30,7 @@ $(document).ready(function() {
         }
 
         $('#showResults').append(`
-        <div class="card d-inline-flex">
+        <div class="card d-inline-flex" id="${bike.id}">
           <img src="${pic}" alt="Card image cap">
           <div class="card-body">
             <h5 class="card-title">${bike.title}</h5>
@@ -36,21 +41,17 @@ $(document).ready(function() {
             <li>Year: ${bike.year}</li>
             </ul>
 
-            <a href="https://bikeindex.org/bikes/${bike.id}" class="btn btn-primary" id="${bike.id}">Go somewhere</a>
+            <a href="https://bikeindex.org/bikes/${bike.id}" class="btn btn-primary" id="${bike.id}" target='blank'>View</a>
           </div>
         </div>
         `);
+
       });
 
     }, function(error) {
       $('#showErrors').text(`There was an error processing your request: ${error.message}`);
     });
   });
-});
 
-// let pic;
-// if(bike.thumb != null) {
-//   pic = bike.thumb;
-// } else {
-//   pic = "img/bike-image.png";
-// }
+
+});
