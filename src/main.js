@@ -9,6 +9,7 @@ import './styles.css';
 $(document).ready(function() {
   $('#search').submit(function(event) {
     event.preventDefault();
+
     let searchTerm = $('#bike').val();
     $('#showResults').empty();
 
@@ -16,10 +17,10 @@ $(document).ready(function() {
     let bikePromise = bikeSearch.getAllBikes(searchTerm);
 
     let harvardSearch = new HarvardSearch();
-    let harvardPromise = harvardSearch.getHarvardImages();
 
     bikePromise.then(function(response) {
       let body = JSON.parse(response);
+      let bikeSize = body.bikes.length;
 
       body.bikes.forEach(function(bike) {
         let pic;
@@ -45,13 +46,34 @@ $(document).ready(function() {
           </div>
         </div>
         `);
-
       });
+      return harvardSearch.getHarvardImages(bikeSize);
+    }, function(error) {
+      $('#showErrors').text(`There was an error processing your request: ${error.message}`);
+    })
+    .then(function(response) {
+      let body = JSON.parse(response);
 
+      body.records.forEach(function(record) {
+        let pic;
+        if(record.baseimageurl === null) {
+          pic = missingBike;
+        } else {
+          pic = record.baseimageurl;
+        }
+
+        $('#showResults').append(`
+        <div class="card d-inline-flex">
+          <div class="card-body">
+            <img src="${pic}" alt="Card image cap" class="havardImage">
+          </div>
+        </div>
+        `);
+      });
     }, function(error) {
       $('#showErrors').text(`There was an error processing your request: ${error.message}`);
     });
+
+
   });
-
-
 });
