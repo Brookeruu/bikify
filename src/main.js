@@ -1,4 +1,5 @@
 import { BikeSearch } from './bikesearch';
+import missingBike from '../images/bike-image.png';
 import $ from 'jquery';
 import 'bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -14,18 +15,18 @@ $(document).ready(function() {
 
     promise.then(function(response) {
       let body = JSON.parse(response);
-      console.log(body);
-      console.log(body.bikes[0].title);
-      $('#theseBikes').empty();
+
       body.bikes.forEach(function(bike) {
         let pic;
-        if(bike.thumb != null) {
+        if(bike.thumb === null) {
+          pic = missingBike;
+        } else {
           pic = bike.thumb;
         }
 
         $('#showResults').append(`
         <div class="card d-inline-flex">
-          <img src="${bike.thumb}" alt="Card image cap">
+          <img src="${pic}" alt="Card image cap">
           <div class="card-body">
             <h5 class="card-title">${bike.title}</h5>
             <p class="text"></p>
@@ -47,20 +48,9 @@ $(document).ready(function() {
   });
 });
 
-
-// $('#theseBikes').append(`<li>${bike.title} ID: ${bike.id} Type: ${bike.title} Manufacturer: ${bike.manufacturer} Year: ${bike.year}</li>`)
-
-// <div class="card">
-//   <img src="${bike.thumb}" alt="Card image cap">
-//   <div class="card-body">
-//     <h5 class="card-title">${bike.title}</h5>
-//     <p class="card-text">
-//     <ul>
-//     <li> ID: ${bike.id}</li>
-//     <li> Manufacturer: ${bike.manufacturer}</li>
-//     <li>Year: ${bike.year}</li>
-//     </ul>
-//     </p>
-//     <a href="#" class="btn btn-primary">Go somewhere</a>
-//   </div>
-// </div>
+// let pic;
+// if(bike.thumb != null) {
+//   pic = bike.thumb;
+// } else {
+//   pic = "img/bike-image.png";
+// }

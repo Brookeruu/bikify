@@ -16,5 +16,6 @@ body {
 }
 
 img {
+  margin: 0;
   height: 30%;
 }
