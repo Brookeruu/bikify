@@ -35,7 +35,7 @@ $(document).ready(function() {
             <li>Year: ${bike.year}</li>
             </ul>
 
-            <a href="#" class="btn btn-primary">Go somewhere</a>
+            <a href="https://bikeindex.org/bikes/${bike.id}" class="btn btn-primary" id="${bike.id}">Go somewhere</a>
           </div>
         </div>
         `);
