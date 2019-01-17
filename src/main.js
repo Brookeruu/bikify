@@ -47,13 +47,15 @@ $(document).ready(function() {
         </div>
         `);
       });
-      return harvardSearch.getHarvardImages(bikeSize);
+      return harvardSearch.getHarvardImages(bikeSize, body.bikes);
     }, function(error) {
       $('#showErrors').text(`There was an error processing your request: ${error.message}`);
     })
     .then(function(response) {
-      let body = JSON.parse(response);
-
+      let body = JSON.parse(response[0]);
+      let bikeArray = response[1];
+      console.log(body);
+      console.log(bikeArray);
       body.records.forEach(function(record) {
         let pic;
         if(record.baseimageurl === null) {
@@ -63,7 +65,7 @@ $(document).ready(function() {
         }
 
         $('#showResults').append(`
-        <div class="card d-inline-flex">
+        <div class="card d-inline-flex" id="${record.imageid}">
           <div class="card-body">
             <img src="${pic}" alt="Card image cap" class="havardImage">
           </div>
@@ -73,7 +75,7 @@ $(document).ready(function() {
     }, function(error) {
       $('#showErrors').text(`There was an error processing your request: ${error.message}`);
     });
-
+    debugger;
 
   });
 });
