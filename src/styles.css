@@ -2,6 +2,19 @@ body {
   background-color: #ddd;
 }
 
-.glyphicon {
-    font-size: 40px;
+.container-fluid {
+  display: inline-grid;
+}
+
+.card {
+  width: 18rem;
+  height: 30rem;
+  display: inline-block;
+  margin: 10px;
+  border: 1px solid #333;
+  padding: 5px;
+}
+
+img {
+  height: 30%;
 }

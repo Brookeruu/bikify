@@ -18,7 +18,27 @@ $(document).ready(function() {
       console.log(body.bikes[0].title);
       $('#theseBikes').empty();
       body.bikes.forEach(function(bike) {
-        $('#theseBikes').append(`<li>${bike.title} ID: ${bike.id} Type: ${bike.title} Manufacturer: ${bike.manufacturer} Year: ${bike.year}</li>`);
+        let pic;
+        if(bike.thumb != null) {
+          pic = bike.thumb;
+        }
+
+        $('#showResults').append(`
+        <div class="card d-inline-flex">
+          <img src="${bike.thumb}" alt="Card image cap">
+          <div class="card-body">
+            <h5 class="card-title">${bike.title}</h5>
+            <p class="text"></p>
+            <ul>
+            <li> ID: ${bike.id}</li>
+            <li> Manufacturer: ${bike.manufacturer}</li>
+            <li>Year: ${bike.year}</li>
+            </ul>
+
+            <a href="#" class="btn btn-primary">Go somewhere</a>
+          </div>
+        </div>
+        `);
       });
 
     }, function(error) {
@@ -26,3 +46,21 @@ $(document).ready(function() {
     });
   });
 });
+
+
+// $('#theseBikes').append(`<li>${bike.title} ID: ${bike.id} Type: ${bike.title} Manufacturer: ${bike.manufacturer} Year: ${bike.year}</li>`)
+
+// <div class="card">
+//   <img src="${bike.thumb}" alt="Card image cap">
+//   <div class="card-body">
+//     <h5 class="card-title">${bike.title}</h5>
+//     <p class="card-text">
+//     <ul>
+//     <li> ID: ${bike.id}</li>
+//     <li> Manufacturer: ${bike.manufacturer}</li>
+//     <li>Year: ${bike.year}</li>
+//     </ul>
+//     </p>
+//     <a href="#" class="btn btn-primary">Go somewhere</a>
+//   </div>
+// </div>
