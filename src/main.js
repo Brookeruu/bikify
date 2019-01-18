@@ -6,6 +6,12 @@ import 'bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './styles.css';
 
+function cardClickListener() {
+  $('.card').on("click", "p", function() {
+    console.log(this.id);
+  })
+}
+
 $(document).ready(function() {
   $('#search').submit(function(event) {
     event.preventDefault();
@@ -22,60 +28,63 @@ $(document).ready(function() {
       let body = JSON.parse(response);
       let bikeSize = body.bikes.length;
 
-      body.bikes.forEach(function(bike) {
-        let pic;
-        if(bike.thumb === null) {
-          pic = missingBike;
-        } else {
-          pic = bike.thumb;
-        }
 
-        $('#showResults').append(`
-        <div class="card d-inline-flex" id="${bike.id}">
-          <img src="${pic}" alt="Card image cap">
-          <div class="card-body">
-            <h5 class="card-title">${bike.title}</h5>
-            <p class="text"></p>
-            <ul>
-            <li> ID: ${bike.id}</li>
-            <li> Manufacturer: ${bike.manufacturer}</li>
-            <li>Year: ${bike.year}</li>
-            </ul>
-
-            <a href="https://bikeindex.org/bikes/${bike.id}" class="btn btn-primary" id="${bike.id}" target='blank'>View</a>
-          </div>
-        </div>
-        `);
-      });
       return harvardSearch.getHarvardImages(bikeSize, body.bikes);
     }, function(error) {
       $('#showErrors').text(`There was an error processing your request: ${error.message}`);
     })
     .then(function(response) {
       let body = JSON.parse(response[0]);
+      let harvardRecords = body.records;
       let bikeArray = response[1];
       console.log(body);
+      console.log(body.records);
       console.log(bikeArray);
-      body.records.forEach(function(record) {
-        let pic;
-        if(record.baseimageurl === null) {
-          pic = missingBike;
+
+      let imageBikeArray = [];
+
+      for(let i = 0; i < harvardRecords.length; i++) {
+        imageBikeArray.push([harvardRecords[i], bikeArray[i]]);
+      }
+
+      for(let j = 0; j < imageBikeArray.length; j++) {
+        let bikeImage;
+        if(imageBikeArray[j][1].thumb === null) {
+          bikeImage = missingBike;
         } else {
-          pic = record.baseimageurl;
+          bikeImage = imageBikeArray[j][1].thumb;
         }
 
         $('#showResults').append(`
-        <div class="card d-inline-flex" id="${record.imageid}">
-          <div class="card-body">
-            <img src="${pic}" alt="Card image cap" class="havardImage">
+          <div class="card d-inline-flex" id="${imageBikeArray[j][1].id}">
+            <img src="${bikeImage}" alt="Card image cap">
+            <div class="card-body">
+              <h5 class="card-title">${imageBikeArray[j][1].title}</h5>
+              <ul>
+                <li> ID: ${imageBikeArray[j][1].id}</li>
+                <li> Manufacturer: ${imageBikeArray[j][1].manufacturer}</li>
+                <li>Year: ${imageBikeArray[j][1].year}</li>
+              </ul>
+
+              <a href="https://bikeindex.org/bikes/${imageBikeArray[j][1].id}" class="btn btn-primary" id="${imageBikeArray[j][1].id}" target='blank'>View</a>
+              <p>Flip Card</p>
+            </div>
           </div>
-        </div>
-        `);
-      });
+
+          <div class="card d-inline-flex harvard" id="${imageBikeArray[j][0].imageid}">
+            <div class="card-body">
+              <img src="${imageBikeArray[j][0].baseimageurl}" alt="Card image cap" class="havardImage">
+              <p>Flip Card</p>
+            </div>
+          </div>
+
+          `);
+      }
+
+
     }, function(error) {
       $('#showErrors').text(`There was an error processing your request: ${error.message}`);
     });
-    debugger;
 
   });
 });
